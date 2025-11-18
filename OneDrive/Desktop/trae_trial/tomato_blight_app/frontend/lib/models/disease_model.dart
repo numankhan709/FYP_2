@@ -373,25 +373,214 @@ class TomatoDiseases {
   }
 }
 
-// Corn support removed: application is tomato-only
+// Corn diseases
+class CornDiseases {
+  static List<Disease> getCommonDiseases() {
+    return [
+      Disease(
+        id: 'corn_common_rust',
+        name: 'Common Rust',
+        description: 'A fungal disease that causes rust-colored pustules on corn leaves, reducing photosynthesis and yield.',
+        symptoms: [
+          'Small, circular to oval rust-colored pustules',
+          'Pustules on both leaf surfaces',
+          'Yellow to brown lesions around pustules',
+          'Premature leaf death',
+          'Reduced plant vigor',
+          'Stunted growth in severe cases'
+        ],
+        causes: [
+          'Puccinia sorghi fungus',
+          'Cool, moist weather (16-23°C)',
+          'High humidity (above 95%)',
+          'Dew formation',
+          'Wind-dispersed spores',
+          'Dense plant canopy'
+        ],
+        treatments: [
+          'Apply fungicides (triazole-based)',
+          'Remove severely affected leaves',
+          'Improve air circulation',
+          'Reduce plant density if possible',
+          'Monitor weather conditions',
+          'Apply foliar fungicides preventively'
+        ],
+        prevention: [
+          'Plant resistant varieties',
+          'Ensure proper plant spacing',
+          'Avoid overhead irrigation',
+          'Remove crop residue',
+          'Rotate with non-host crops',
+          'Monitor for early symptoms'
+        ],
+        imageUrl: 'assets/images/corn_common_rust.jpg',
+        affectedParts: ['leaves'],
+      ),
+      Disease(
+        id: 'corn_gray_leaf_spot',
+        name: 'Gray Leaf Spot',
+        description: 'A fungal disease causing rectangular gray lesions on corn leaves, leading to significant yield losses.',
+        symptoms: [
+          'Rectangular gray to tan lesions',
+          'Lesions parallel to leaf veins',
+          'Yellow halos around lesions',
+          'Lesions may coalesce',
+          'Premature leaf senescence',
+          'Reduced grain fill'
+        ],
+        causes: [
+          'Cercospora zeae-maydis fungus',
+          'Warm, humid conditions (22-30°C)',
+          'Extended leaf wetness',
+          'High relative humidity',
+          'Corn residue from previous season',
+          'Continuous corn cropping'
+        ],
+        treatments: [
+          'Apply strobilurin fungicides',
+          'Use triazole fungicides',
+          'Time applications at early symptoms',
+          'Ensure good spray coverage',
+          'Consider multiple applications',
+          'Remove infected plant debris'
+        ],
+        prevention: [
+          'Plant resistant hybrids',
+          'Rotate crops (2-3 year rotation)',
+          'Tillage to bury crop residue',
+          'Avoid continuous corn',
+          'Monitor weather conditions',
+          'Scout fields regularly'
+        ],
+        imageUrl: 'assets/images/corn_gray_leaf_spot.jpg',
+        affectedParts: ['leaves'],
+      ),
+      Disease(
+        id: 'corn_northern_leaf_blight',
+        name: 'Northern Leaf Blight',
+        description: 'A fungal disease causing large, elliptical lesions on corn leaves, significantly reducing yield potential.',
+        symptoms: [
+          'Large, elliptical gray-green lesions',
+          'Lesions 2.5-15 cm long',
+          'Tan to gray centers with dark borders',
+          'Lesions may girdle leaves',
+          'Premature leaf death',
+          'Reduced photosynthetic area'
+        ],
+        causes: [
+          'Exserohilum turcicum fungus',
+          'Moderate temperatures (18-27°C)',
+          'High humidity (above 90%)',
+          'Extended leaf wetness (6+ hours)',
+          'Corn residue',
+          'Susceptible corn varieties'
+        ],
+        treatments: [
+          'Apply fungicides at early symptoms',
+          'Use strobilurin or triazole fungicides',
+          'Ensure thorough spray coverage',
+          'Consider tank mixing fungicides',
+          'Time applications before tasseling',
+          'Monitor disease progression'
+        ],
+        prevention: [
+          'Plant resistant varieties',
+          'Crop rotation with non-host crops',
+          'Tillage to reduce inoculum',
+          'Balanced fertilization',
+          'Avoid excessive nitrogen',
+          'Scout fields regularly'
+        ],
+        imageUrl: 'assets/images/corn_northern_leaf_blight.jpg',
+        affectedParts: ['leaves'],
+      ),
+      Disease(
+        id: 'corn_healthy',
+        name: 'Healthy Corn',
+        description: 'The corn plant appears healthy with no visible signs of disease.',
+        symptoms: [
+          'Green, vibrant leaves',
+          'No lesions or spots',
+          'Normal growth and development',
+          'Good leaf color and texture',
+          'Proper ear development'
+        ],
+        causes: [],
+        treatments: [
+          'Continue current management practices',
+          'Monitor regularly for disease symptoms',
+          'Maintain proper nutrition and irrigation'
+        ],
+        prevention: [
+          'Use balanced fertilization program',
+          'Ensure adequate soil drainage',
+          'Monitor for early disease symptoms',
+          'Maintain proper plant population',
+          'Follow integrated pest management'
+        ],
+        imageUrl: 'assets/images/corn_healthy.jpg',
+        affectedParts: ['leaves', 'stems'],
+      ),
+    ];
+  }
+
+  static Disease? getByName(String name) {
+    final diseases = getCommonDiseases();
+    try {
+      return diseases.firstWhere(
+        (disease) => disease.name.toLowerCase() == name.toLowerCase() ||
+                    disease.id == name,
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+  
+  static Disease? getById(String id) {
+    final diseases = getCommonDiseases();
+    try {
+      return diseases.firstWhere((disease) => disease.id == id);
+    } catch (e) {
+      return null;
+    }
+  }
+}
 
 // Combined disease database
 class DiseaseDatabase {
   static List<Disease> getAllDiseases() {
-    // Tomato-only diseases
-    return TomatoDiseases.getCommonDiseases();
+    return [
+      ...TomatoDiseases.getCommonDiseases(),
+      ...CornDiseases.getCommonDiseases(),
+    ];
   }
 
   static Disease? getById(String id) {
-    return TomatoDiseases.getById(id);
+    // Try tomato diseases first
+    Disease? disease = TomatoDiseases.getById(id);
+    if (disease != null) return disease;
+    
+    // Then try corn diseases
+    return CornDiseases.getById(id);
   }
 
   static Disease? getByName(String name) {
-    return TomatoDiseases.getByName(name);
+    // Try tomato diseases first
+    Disease? disease = TomatoDiseases.getByName(name);
+    if (disease != null) return disease;
+    
+    // Then try corn diseases
+    return CornDiseases.getByName(name);
   }
 
   static List<Disease> getDiseasesByPlantType(String plantType) {
-    // Tomato-only
-    return TomatoDiseases.getCommonDiseases();
+    switch (plantType.toLowerCase()) {
+      case 'tomato':
+        return TomatoDiseases.getCommonDiseases();
+      case 'corn':
+        return CornDiseases.getCommonDiseases();
+      default:
+        return getAllDiseases();
+    }
   }
 }

@@ -313,11 +313,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   }
 
   Widget _buildRiskAssessmentCard(WeatherProvider weatherProvider) {
-    final mlAvailable = weatherProvider.hasMlResult;
-    final predictedLabel = weatherProvider.mlPredictedLabel;
-    final topProb = weatherProvider.mlTopProbability;
-    final fallbackRisk = weatherProvider.backendRiskLevel ?? weatherProvider.weatherRiskLevel;
-    final riskLevel = fallbackRisk;
+    final riskLevel = weatherProvider.weatherRiskLevel;
     
     Color riskColor;
     IconData riskIcon;
@@ -385,26 +381,17 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 color: riskColor.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(UIConstants.borderRadiusSmall),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    mlAvailable && predictedLabel != null
-                        ? 'Model: $predictedLabel${topProb != null ? ' (${(topProb * 100).toStringAsFixed(1)}%)' : ''}'
-                        : 'Heuristic: $riskLevel',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: riskColor,
-                    ),
-                  ),
-                ],
+              child: Text(
+                riskLevel,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: riskColor,
+                ),
               ),
             ),
             const SizedBox(height: UIConstants.paddingMedium),
             Text(
-              mlAvailable && predictedLabel != null
-                  ? 'Model-based assessment available. Fallback risk: $riskLevel.'
-                  : _getRiskDescription(riskLevel),
+              _getRiskDescription(riskLevel),
               style: TextStyle(
                 color: Theme.of(context).brightness == Brightness.dark 
                     ? AppColors.textSecondaryDark 

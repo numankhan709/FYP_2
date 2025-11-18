@@ -1,0 +1,76 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradients for modern look -->
+    <linearGradient id="tomatoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#E53E3E;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C53030;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="leafGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#68D391;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#48BB78;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#38A169;stop-opacity:1" />
+    </linearGradient>
+    
+    <radialGradient id="shieldGradient" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" style="stop-color:#4299E1;stop-opacity:0.9" />
+      <stop offset="70%" style="stop-color:#3182CE;stop-opacity:0.7" />
+      <stop offset="100%" style="stop-color:#2B6CB0;stop-opacity:0.5" />
+    </radialGradient>
+    
+    <!-- Drop shadow filter -->
+    <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="url(#shieldGradient)" filter="url(#dropShadow)" opacity="0.1"/>
+  
+  <!-- Shield background -->
+  <path d="M100 20 L140 40 L140 80 Q140 120 100 160 Q60 120 60 80 L60 40 Z" 
+        fill="url(#shieldGradient)" opacity="0.8" filter="url(#dropShadow)"/>
+  
+  <!-- Main tomato body -->
+  <ellipse cx="100" cy="110" rx="35" ry="40" fill="url(#tomatoGradient)" filter="url(#dropShadow)"/>
+  
+  <!-- Tomato segments -->
+  <path d="M75 95 Q100 85 125 95 Q115 110 100 115 Q85 110 75 95" fill="#C53030" opacity="0.6"/>
+  <path d="M80 115 Q100 105 120 115 Q110 130 100 135 Q90 130 80 115" fill="#C53030" opacity="0.4"/>
+  
+  <!-- Tomato leaves/stem -->
+  <g transform="translate(100, 75)">
+    <!-- Center stem -->
+    <rect x="-2" y="-5" width="4" height="10" fill="#38A169" rx="2"/>
+    
+    <!-- Left leaf -->
+    <path d="M-15 -5 Q-25 -15 -20 -25 Q-10 -20 -5 -10 Z" fill="url(#leafGradient)"/>
+    
+    <!-- Right leaf -->
+    <path d="M15 -5 Q25 -15 20 -25 Q10 -20 5 -10 Z" fill="url(#leafGradient)"/>
+    
+    <!-- Center leaf -->
+    <path d="M0 -10 Q-5 -20 0 -30 Q5 -20 0 -10 Z" fill="url(#leafGradient)"/>
+  </g>
+  
+  <!-- AI/Tech elements -->
+  <g opacity="0.7">
+    <!-- Circuit pattern around tomato -->
+    <circle cx="70" cy="90" r="2" fill="#4299E1"/>
+    <circle cx="130" cy="90" r="2" fill="#4299E1"/>
+    <circle cx="85" cy="140" r="2" fill="#4299E1"/>
+    <circle cx="115" cy="140" r="2" fill="#4299E1"/>
+    
+    <!-- Connecting lines -->
+    <line x1="70" y1="90" x2="85" y2="140" stroke="#4299E1" stroke-width="1" opacity="0.5"/>
+    <line x1="130" y1="90" x2="115" y2="140" stroke="#4299E1" stroke-width="1" opacity="0.5"/>
+  </g>
+  
+  <!-- Highlight on tomato -->
+  <ellipse cx="90" cy="100" rx="8" ry="12" fill="#FF8E8E" opacity="0.6"/>
+  
+  <!-- Guard symbol (checkmark) -->
+  <path d="M90 120 L95 125 L110 110" stroke="#FFFFFF" stroke-width="3" fill="none" 
+        stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+</svg>

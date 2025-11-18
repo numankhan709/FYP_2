@@ -1,46 +1,33 @@
-﻿import 'package:flutter/foundation.dart';
-
 class ApiConstants {
-  // Backend API base URLs
-  static const String baseUrlWeb = 'http://localhost:3000/api';
-  // Update this to your machine's LAN IP shown by backend logs
-  // Example from server logs: Network access: http://172.17.242.215:3000/api/health
-  // Set to your PC's LAN IP so a physical Android device can reach the backend
-  // Update this to match the "Network access" line printed by the server at startup
-  // Example from logs: 🌐 Network access: http://172.17.242.215:3001/api/health
-  // Set to your PC's LAN IP so physical devices can reach the backend
-  // Detected IPv4 candidates: 192.168.117.1, 192.168.160.1, 192.168.100.58
-  // Using 192.168.100.58 for current Wi‑Fi network
-  static const String baseUrlDevice = 'http://192.168.100.58:3000/api';
-
-  // Resolve base URL per platform at runtime
-  static String get baseUrl {
-    // For physical devices, use configured LAN IP
-    // For emulator runs, temporarily set baseUrlDevice to 'http://10.0.2.2:3000/api'
-    return kIsWeb ? baseUrlWeb : baseUrlDevice;
-  }
-
+  // Backend API base URL - update this when backend is deployed
+//  static const String baseUrl = 'http://172.17.241.147:3000/api';
+//  static const String baseUrl = 'http://172.17.240.225:3000/api';
+//  static const String baseUrl = 'http://10.0.2.2:3000/api'; // For Android emulator
+  static const String baseUrl = 'http://192.168.100.58:3000/api';
+  static const List<String> baseUrlCandidates = [
+    'http://192.168.100.58:3000/api',
+    'http://192.168.43.220:3000/api',
+    'http://172.17.240.225:3000/api',
+    'http://10.0.2.2:3000/api',
+    'http://172.17.243.50:3000/api',
+  ];
+  
   // OpenWeather API
+  // Get your free API key from: https://openweathermap.org/api
+  // Replace 'demo_key' with your actual API key
   static const String openWeatherApiKey = '06f4afbb6059e103852222fdbaa3c8e7';
   static const String openWeatherBaseUrl = 'https://api.openweathermap.org/data/2.5';
-
+  
   // API Endpoints
   static const String loginEndpoint = '/auth/login';
   static const String signupEndpoint = '/auth/signup';
-  static const String forgotPasswordEndpoint = '/auth/forgot-password';
-  static const String resetPasswordEndpoint = '/auth/reset-password';
   static const String logoutEndpoint = '/auth/logout';
   static const String profileEndpoint = '/auth/profile';
   static const String diseasesEndpoint = '/diseases';
   static const String analyzeEndpoint = '/diseases/analyze';
   static const String scansEndpoint = '/scans';
   static const String riskAssessmentEndpoint = '/diseases/risk-assessment';
-  // Weather endpoints (backend)
-  static const String weatherCurrentEndpoint = '/weather/current';
-  static const String weatherForecastEndpoint = '/weather/forecast';
-  static const String weatherMlAssessEndpoint = '/weather-ml/assess';
-  static const String weatherMlAlertsEndpoint = '/weather-ml/alerts';
-
+  
   // Request timeouts
   static const Duration requestTimeout = Duration(seconds: 30);
   static const Duration uploadTimeout = Duration(minutes: 2);
@@ -51,7 +38,7 @@ class AppConstants {
   static const String appName = 'Tomato Disease Classification';
   static const String appVersion = '1.0.0';
   static const String appTagline = 'Smart Disease Detection for Healthier Crops';
-  static const String appDescription =
+  static const String appDescription = 
       'An intelligent mobile application for early detection and management of tomato diseases using AI-powered image analysis and weather-based risk assessment.';
   
   // Features
@@ -149,10 +136,9 @@ class ValidationConstants {
   // Email validation
   static const String emailPattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
   
-  // Password validation aligned with backend regex
-  static const int minPasswordLength = 5;
+  // Password validation
+  static const int minPasswordLength = 6;
   static const int maxPasswordLength = 50;
-  static const String passwordPattern = r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{5,}$';
   
   // Name validation
   static const int minNameLength = 2;
@@ -162,9 +148,8 @@ class ValidationConstants {
   static const String emailRequiredError = 'Email is required';
   static const String emailInvalidError = 'Please enter a valid email address';
   static const String passwordRequiredError = 'Password is required';
-  static const String passwordTooShortError = 'Password must be at least 5 characters';
+  static const String passwordTooShortError = 'Password must be at least 6 characters';
   static const String passwordTooLongError = 'Password must be less than 50 characters';
-  static const String passwordFormatError = 'Password must include upper, lower, and a number';
   static const String nameRequiredError = 'Name is required';
   static const String nameTooShortError = 'Name must be at least 2 characters';
   static const String nameTooLongError = 'Name must be less than 50 characters';
@@ -178,11 +163,9 @@ class ValidationConstants {
 }
 
 class RouteConstants {
-  // Removed splash routes; app now starts directly at login or home via router logic
-  static const String welcomeSplash = '/welcome-splash';
+  static const String splash = '/';
   static const String login = '/login';
   static const String signup = '/signup';
-  static const String forgotPassword = '/forgot-password';
   static const String resetPassword = '/reset-password';
   static const String home = '/home';
   static const String scan = '/scan';
@@ -196,5 +179,4 @@ class RouteConstants {
   static const String about = '/about';
   static const String profile = '/profile';
   static const String settings = '/settings';
-  // Forgot/Reset password routes
 }

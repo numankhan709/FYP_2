@@ -1,0 +1,91 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgGradient" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B2635;stop-opacity:1" />
+    </radialGradient>
+    <linearGradient id="leafGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#E53E3E;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#CC2936;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B2635;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="leafGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF8A80;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#FF5252;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#E53E3E;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#CC2936;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="leafGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFAB91;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#FF7043;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#FF5722;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E53E3E;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="tomatoGradient" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#E53E3E;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#CC2936;stop-opacity:1" />
+    </radialGradient>
+    <linearGradient id="greenLeafGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4CAF50;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#388E3C;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2E7D32;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#bgGradient)"/>
+  
+  <!-- Tomato shapes -->
+  <circle cx="80" cy="80" r="25" fill="url(#tomatoGradient)" opacity="0.8"/>
+  <circle cx="320" cy="60" r="20" fill="url(#tomatoGradient)" opacity="0.7"/>
+  <circle cx="150" cy="120" r="18" fill="url(#tomatoGradient)" opacity="0.6"/>
+  <circle cx="280" cy="140" r="22" fill="url(#tomatoGradient)" opacity="0.75"/>
+  
+  <!-- Tomato stems -->
+  <path d="M80 55 Q82 50 85 48 Q88 50 90 55" stroke="#4CAF50" stroke-width="2" fill="none" opacity="0.8"/>
+  <path d="M320 40 Q322 35 325 33 Q328 35 330 40" stroke="#4CAF50" stroke-width="1.5" fill="none" opacity="0.7"/>
+  <path d="M150 102 Q152 97 155 95 Q158 97 160 102" stroke="#4CAF50" stroke-width="1.5" fill="none" opacity="0.6"/>
+  
+  <!-- Green leaves for contrast -->
+  <path d="M-20 50 Q30 20 80 30 Q120 40 150 70 Q140 110 120 130 Q90 140 60 135 Q30 125 10 100 Q-10 80 -20 50 Z" fill="url(#greenLeafGradient)" opacity="0.6"/>
+  <path d="M-20 50 Q15 35 50 40 Q75 45 90 65 Q85 85 75 95 Q60 100 45 98 Q30 95 20 85 Q5 75 -20 50 Z" fill="url(#greenLeafGradient)" opacity="0.4"/>
+  
+  <!-- Central coral-red leaf -->
+  <path d="M120 20 Q180 10 240 25 Q290 45 320 80 Q315 120 300 150 Q270 170 230 175 Q180 170 140 155 Q110 135 100 105 Q105 70 120 20 Z" fill="url(#leafGradient2)" opacity="0.95"/>
+  <path d="M120 20 Q160 15 200 25 Q230 35 250 55 Q245 80 235 100 Q215 115 190 118 Q160 115 140 105 Q125 90 122 70 Q125 45 120 20 Z" fill="url(#leafGradient3)" opacity="0.8"/>
+  
+  <!-- Right side coral-red leaf -->
+  <path d="M300 40 Q350 30 400 45 Q420 80 415 120 Q405 160 380 185 Q350 200 315 195 Q285 185 265 165 Q255 140 260 115 Q270 85 300 40 Z" fill="url(#leafGradient1)" opacity="0.85"/>
+  
+  <!-- Overlapping medium coral leaves -->
+  <path d="M50 120 Q90 110 130 120 Q160 135 175 165 Q170 195 155 215 Q130 225 105 220 Q80 210 65 190 Q55 165 50 120 Z" fill="url(#leafGradient3)" opacity="0.8"/>
+  
+  <path d="M200 100 Q240 90 280 100 Q310 115 325 145 Q320 175 305 195 Q280 205 255 200 Q230 190 215 170 Q205 145 200 100 Z" fill="url(#leafGradient2)" opacity="0.75"/>
+  
+  <!-- Bottom layer coral leaves -->
+  <path d="M80 200 Q120 190 160 200 Q190 215 205 245 Q200 275 185 295 Q160 305 135 300 Q110 290 95 270 Q85 245 80 200 Z" fill="url(#leafGradient1)" opacity="0.7"/>
+  
+  <path d="M250 180 Q290 170 330 180 Q360 195 375 225 Q370 255 355 275 Q330 285 305 280 Q280 270 265 250 Q255 225 250 180 Z" fill="url(#leafGradient3)" opacity="0.65"/>
+  
+  <!-- Small green accent leaves -->
+  <path d="M30 180 Q50 175 70 180 Q80 190 78 205 Q75 220 68 230 Q58 235 48 233 Q38 228 33 218 Q30 205 30 180 Z" fill="url(#greenLeafGradient)" opacity="0.5"/>
+  
+  <path d="M350 120 Q370 115 390 120 Q400 130 398 145 Q395 160 388 170 Q378 175 368 173 Q358 168 353 158 Q350 145 350 120 Z" fill="url(#greenLeafGradient)" opacity="0.4"/>
+  
+  <!-- Additional small tomatoes -->
+  <circle cx="60" cy="220" r="12" fill="url(#tomatoGradient)" opacity="0.6"/>
+  <circle cx="350" cy="200" r="15" fill="url(#tomatoGradient)" opacity="0.7"/>
+  
+  <!-- Leaf veins and details -->
+  <path d="M120 20 Q180 15 240 25" stroke="#8B2635" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M160 40 Q180 60 200 80" stroke="#8B2635" stroke-width="1" fill="none" opacity="0.4"/>
+  <path d="M180 50 Q200 70 220 90" stroke="#8B2635" stroke-width="1" fill="none" opacity="0.4"/>
+  
+  <path d="M50 120 Q90 115 130 120" stroke="#2E7D32" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <path d="M70 140 Q90 155 110 170" stroke="#2E7D32" stroke-width="1" fill="none" opacity="0.3"/>
+  
+  <path d="M300 40 Q350 35 400 45" stroke="#8B2635" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <path d="M320 60 Q340 80 360 100" stroke="#8B2635" stroke-width="1" fill="none" opacity="0.3"/>
+</svg>

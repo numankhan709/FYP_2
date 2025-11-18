@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/disease_provider.dart';
@@ -252,7 +253,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       border: Border.all(color: confidenceColor.withOpacity(0.5)),
                     ),
                     child: Text(
-                      '${scan.confidence.toStringAsFixed(1)}%',
+                      '${(scan.confidence * 100).toStringAsFixed(1)}%',
                       style: TextStyle(
                         color: confidenceColor,
                         fontWeight: FontWeight.bold,
@@ -400,8 +401,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   if (scan.imagePath.isNotEmpty) ...[
                     ClipRRect(
                       borderRadius: BorderRadius.circular(UIConstants.borderRadiusMedium),
-                      child: Image.network(
-                        scan.imagePath,
+                      child: Image.file(
+                        File(scan.imagePath),
                         height: 200,
                         width: double.infinity,
                         fit: BoxFit.cover,
@@ -517,7 +518,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 Text('Your scan report has been saved successfully.'),
                 SizedBox(height: 8),
                 Text(
-                  'Location: Downloads/TomatoCare/',
+                  'Saved to: App Documents/TomatoCare/Reports/',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[600],

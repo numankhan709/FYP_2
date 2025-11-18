@@ -1,0 +1,87 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Definitions for gradients -->
+  <defs>
+    <!-- Main tomato gradient - realistic red with highlights -->
+    <radialGradient id="tomatoMainGradient" cx="35%" cy="25%" r="80%">
+      <stop offset="0%" style="stop-color:#FF7B7B;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#FF4444;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#E53935;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C62828;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- Tomato highlight gradient -->
+    <radialGradient id="tomatoHighlight" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" style="stop-color:#FFAAAA;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#FF6B6B;stop-opacity:0.3" />
+    </radialGradient>
+    
+    <!-- Green leaves gradient -->
+    <linearGradient id="leafGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#81C784;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#66BB6A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4CAF50;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Calyx (green top) gradient -->
+    <radialGradient id="calyxGradient" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" style="stop-color:#8BC34A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#689F38;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Main tomato body - round and realistic -->
+  <circle cx="100" cy="110" r="55" fill="url(#tomatoMainGradient)"/>
+  
+  <!-- Tomato natural indentations/segments -->
+  <path d="M60 90 Q100 85 140 90" fill="none" stroke="#D32F2F" stroke-width="1.5" opacity="0.4"/>
+  <path d="M65 110 Q100 105 135 110" fill="none" stroke="#D32F2F" stroke-width="1.5" opacity="0.4"/>
+  <path d="M70 130 Q100 125 130 130" fill="none" stroke="#D32F2F" stroke-width="1.5" opacity="0.4"/>
+  <path d="M75 150 Q100 145 125 150" fill="none" stroke="#D32F2F" stroke-width="1.5" opacity="0.4"/>
+  
+  <!-- Main highlight on tomato -->
+  <ellipse cx="80" cy="85" rx="18" ry="22" fill="url(#tomatoHighlight)"/>
+  
+  <!-- Secondary smaller highlights -->
+  <ellipse cx="70" cy="75" rx="8" ry="10" fill="#FFCCCC" opacity="0.6"/>
+  <ellipse cx="120" cy="95" rx="6" ry="8" fill="#FFCCCC" opacity="0.4"/>
+  
+  <!-- Tomato calyx (green top part) -->
+  <ellipse cx="100" cy="60" rx="25" ry="12" fill="url(#calyxGradient)"/>
+  <ellipse cx="100" cy="58" rx="22" ry="10" fill="#A5D6A7" opacity="0.7"/>
+  
+  <!-- Realistic tomato leaves - positioned upright -->
+  <!-- Center leaf (main, tallest) -->
+  <path d="M100 55 Q98 35 95 15 Q100 20 105 15 Q102 35 100 55 Z" fill="url(#leafGradient)"/>
+  <path d="M100 55 Q98 35 95 15" fill="none" stroke="#388E3C" stroke-width="1"/>
+  <path d="M100 55 Q102 35 105 15" fill="none" stroke="#388E3C" stroke-width="1"/>
+  
+  <!-- Left leaf -->
+  <path d="M85 58 Q80 40 75 22 Q82 25 88 20 Q85 40 85 58 Z" fill="url(#leafGradient)"/>
+  <path d="M85 58 Q80 40 75 22" fill="none" stroke="#388E3C" stroke-width="1"/>
+  
+  <!-- Right leaf -->
+  <path d="M115 58 Q120 40 125 22 Q118 25 112 20 Q115 40 115 58 Z" fill="url(#leafGradient)"/>
+  <path d="M115 58 Q120 40 125 22" fill="none" stroke="#388E3C" stroke-width="1"/>
+  
+  <!-- Left-center leaf -->
+  <path d="M92 56 Q88 38 85 20 Q90 23 95 18 Q92 38 92 56 Z" fill="url(#leafGradient)"/>
+  <path d="M92 56 Q88 38 85 20" fill="none" stroke="#388E3C" stroke-width="1"/>
+  
+  <!-- Right-center leaf -->
+  <path d="M108 56 Q112 38 115 20 Q110 23 105 18 Q108 38 108 56 Z" fill="url(#leafGradient)"/>
+  <path d="M108 56 Q112 38 115 20" fill="none" stroke="#388E3C" stroke-width="1"/>
+  
+  <!-- Leaf veins for realism -->
+  <path d="M95 35 Q97 30 100 40" fill="none" stroke="#2E7D32" stroke-width="0.5" opacity="0.8"/>
+  <path d="M80 40 Q82 35 85 45" fill="none" stroke="#2E7D32" stroke-width="0.5" opacity="0.8"/>
+  <path d="M120 40 Q118 35 115 45" fill="none" stroke="#2E7D32" stroke-width="0.5" opacity="0.8"/>
+  <path d="M88 38 Q90 33 92 43" fill="none" stroke="#2E7D32" stroke-width="0.5" opacity="0.8"/>
+  <path d="M112 38 Q110 33 108 43" fill="none" stroke="#2E7D32" stroke-width="0.5" opacity="0.8"/>
+  
+  <!-- Small stem at the very top -->
+  <rect x="98" y="10" width="4" height="12" fill="#8BC34A" rx="2"/>
+  <ellipse cx="100" cy="10" rx="2" ry="3" fill="#689F38"/>
+  
+  <!-- Subtle shadow beneath tomato -->
+  <ellipse cx="100" cy="175" rx="45" ry="8" fill="#000000" opacity="0.15"/>
+</svg>

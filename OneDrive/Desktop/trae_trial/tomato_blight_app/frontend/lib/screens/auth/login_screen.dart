@@ -7,7 +7,6 @@ import '../../providers/auth_provider.dart';
 import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
 import '../../constants/app_colors.dart';
-import '../../services/splash_service.dart';
 
 class LeafIconPainter extends CustomPainter {
   @override
@@ -339,22 +338,12 @@ class _LoginScreenState extends State<LoginScreen>
           _loginStatusText = loginSuccess ? 'Welcome back!' : '';
         });
         
-        if (loginSuccess) {
-          // Check if welcome splash should be shown
-          final shouldShowWelcome = await SplashService.shouldShowWelcomeSplash();
-          
-          if (shouldShowWelcome) {
-            // Navigate to welcome splash screen
-            if (mounted) {
-              context.go(RouteConstants.welcomeSplash);
-            }
-          } else {
-            // Navigate directly to home
-            if (mounted) {
-              context.go(RouteConstants.home);
-            }
-          }
-        } else {
+        // Only navigate if login was successful
+        if (loginSuccess && mounted && !_hasNavigated) {
+          _hasNavigated = true;
+          // Use go instead of pushReplacement to work with the router
+          context.go(RouteConstants.home);
+        } else if (!loginSuccess && mounted) {
           // Show error message if login failed
           final errorMessage = authProvider.errorMessage ?? 'Login failed';
           ScaffoldMessenger.of(context).showSnackBar(
@@ -400,6 +389,7 @@ class _LoginScreenState extends State<LoginScreen>
     final isDark = theme.brightness == Brightness.dark;
     
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -421,35 +411,34 @@ class _LoginScreenState extends State<LoginScreen>
         ),
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height - 
-                          MediaQuery.of(context).padding.top - 
-                          MediaQuery.of(context).padding.bottom - 40,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 40),
-                  
-                  // Header with modern card design
-                  _buildModernHeader(),
-                  
-                  const SizedBox(height: 32),
-                  
-                  // Login Form Card
-                  _buildModernLoginCard(),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Sign Up Link
-                  _buildModernSignUpLink(),
-                  
-                  const SizedBox(height: 40),
-                ],
-              ),
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: EdgeInsets.fromLTRB(
+              24,
+              20,
+              24,
+              20 + MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 40),
+                
+                // Header with modern card design
+                _buildModernHeader(),
+                
+                const SizedBox(height: 32),
+                
+                // Login Form Card
+                _buildModernLoginCard(),
+                
+                const SizedBox(height: 24),
+                
+                // Sign Up Link
+                _buildModernSignUpLink(),
+                
+                const SizedBox(height: 40),
+              ],
             ),
           ),
         ),
@@ -752,25 +741,20 @@ class _LoginScreenState extends State<LoginScreen>
           alignment: Alignment.centerRight,
           child: TextButton(
             onPressed: () {
-              // TODO: Implement forgot password functionality
-              ErrorHelper.showErrorSnackBar(
-                context,
-                'Forgot password feature coming soon!',
-              );
+              context.go(RouteConstants.resetPassword);
             },
             style: TextButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               minimumSize: Size.zero,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-            child: const Text(
-              'Forgot Password?',
+            child: const Text('Forgot Password?',
               style: TextStyle(
-                color: Color(0xFF228B22), // Primary forest green
+                color: Color(0xFF228B22),
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
                 decoration: TextDecoration.underline,
-                decorationColor: Color(0xFF228B22), // Primary forest green
+                decorationColor: Color(0xFF228B22),
               ),
             ),
           ),
@@ -795,16 +779,19 @@ class _LoginScreenState extends State<LoginScreen>
                   width: MediaQuery.of(context).size.width - 48,
                   animation: true,
                   animationDuration: 300,
-                  lineHeight: 8.0,
+                  lineHeight: 16.0,
                   percent: _loginProgress,
-                  center: Text(
-                    '${(_loginProgress * 100).toInt()}%',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: isDark 
-                        ? const Color(0xFF1E1E1E) 
-                        : Colors.white,
+                  center: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      '${(_loginProgress * 100).toInt()}%',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: isDark 
+                          ? const Color(0xFF1E1E1E) 
+                          : Colors.white,
+                      ),
                     ),
                   ),
                   linearStrokeCap: LinearStrokeCap.roundAll,

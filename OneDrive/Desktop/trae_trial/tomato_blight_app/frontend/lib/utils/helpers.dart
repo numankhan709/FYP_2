@@ -12,11 +12,8 @@ class ValidationHelper {
   }
 
   static bool isValidPassword(String password) {
-    if (password.length < ValidationConstants.minPasswordLength ||
-        password.length > ValidationConstants.maxPasswordLength) {
-      return false;
-    }
-    return RegExp(ValidationConstants.passwordPattern).hasMatch(password);
+    return password.length >= ValidationConstants.minPasswordLength &&
+           password.length <= ValidationConstants.maxPasswordLength;
   }
 
   static bool isValidName(String name) {
@@ -35,24 +32,6 @@ class ValidationHelper {
   }
 
   static String? validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return ValidationConstants.passwordRequiredError;
-    }
-    if (value.length < ValidationConstants.minPasswordLength) {
-      return ValidationConstants.passwordTooShortError;
-    }
-    if (value.length > ValidationConstants.maxPasswordLength) {
-      return ValidationConstants.passwordTooLongError;
-    }
-    if (!RegExp(ValidationConstants.passwordPattern).hasMatch(value)) {
-      return ValidationConstants.passwordFormatError;
-    }
-    return null;
-  }
-
-  // Login-specific validator: allow legacy/simple passwords to submit.
-  // Enforces length bounds only; avoids strict complexity for login.
-  static String? validatePasswordForLogin(String? value) {
     if (value == null || value.isEmpty) {
       return ValidationConstants.passwordRequiredError;
     }
@@ -304,24 +283,7 @@ class StringHelper {
 
 class ErrorHelper {
   static String getErrorMessage(dynamic error) {
-    if (error is BackendAnalyzeException) {
-      // Prefer backend-provided message when available
-      final status = error.status;
-      final message = error.message;
-      if (message.isNotEmpty) return message;
-      switch (status) {
-        case 'model_missing':
-          return 'Model not available on server. Please reinstall or contact support.';
-        case 'predict_failed':
-          return 'Prediction failed on server. Try again with a clearer photo.';
-        case 'server_error':
-          return 'Server error during analysis. Please try again later.';
-        case 'network_error':
-          return ValidationConstants.networkError;
-        default:
-          return ValidationConstants.unknownError;
-      }
-    } else if (error is SocketException) {
+    if (error is SocketException) {
       return ValidationConstants.networkError;
     } else if (error is FormatException) {
       return ValidationConstants.serverError;
@@ -359,17 +321,6 @@ class ErrorHelper {
       ),
     );
   }
-}
-
-// Explicit error type for backend image analysis failures
-class BackendAnalyzeException implements Exception {
-  final String status;
-  final String message;
-  BackendAnalyzeException({required this.status, String? message})
-      : message = message?.trim() ?? '';
-
-  @override
-  String toString() => 'BackendAnalyzeException(status: $status, message: $message)';
 }
 
 class DeviceHelper {

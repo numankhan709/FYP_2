@@ -12,28 +12,19 @@ class WeatherProvider with ChangeNotifier {
   
   WeatherData? _currentWeather;
   List<WeatherData> _forecast = [];
+  List<Map<String, dynamic>> _weatherAlerts = [];
   Position? _currentPosition;
   String? _currentLocation;
   bool _isLoading = false;
   String? _errorMessage;
-  DateTime? _lastWeatherFetchAt;
-  DateTime? _lastBackendAssessmentsAt;
-  // Backend/ML assessment state
-  Map<String, dynamic>? _mlAssessment;
-  String? _backendRiskLevel; // heuristic from backend /api/weather/current
-
-  // Weather-triggered disease alerts
-  List<Map<String, dynamic>> _weatherAlerts = [];
 
   WeatherData? get currentWeather => _currentWeather;
   List<WeatherData> get forecast => _forecast;
+  List<Map<String, dynamic>> get weatherAlerts => _weatherAlerts;
   Position? get currentPosition => _currentPosition;
   String? get currentLocation => _currentLocation;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
-  Map<String, dynamic>? get mlAssessment => _mlAssessment;
-  String? get backendRiskLevel => _backendRiskLevel;
-  List<Map<String, dynamic>> get weatherAlerts => _weatherAlerts;
   
   // Set context for theme updates
   void setContext(BuildContext context) {
@@ -42,6 +33,7 @@ class WeatherProvider with ChangeNotifier {
   
   // Get current risk assessment based on weather conditions
   Map<String, dynamic>? get currentRiskAssessment {
+    if (_backendRisk != null) return _backendRisk;
     if (_currentWeather == null) return null;
     final riskLevel = _calculateDiseaseRisk(_currentWeather!.temperature, _currentWeather!.humidity);
     return {
@@ -60,6 +52,8 @@ class WeatherProvider with ChangeNotifier {
   WeatherProvider() {
     _initializeLocation();
   }
+
+  Map<String, dynamic>? _backendRisk;
 
   Future<void> _initializeLocation() async {
     try {
@@ -220,10 +214,19 @@ class WeatherProvider with ChangeNotifier {
     
     try {
       // Fetch current weather
-      _currentWeather = await _weatherService.getCurrentWeather(
-        _currentPosition!.latitude,
-        _currentPosition!.longitude,
-      );
+      try {
+        final backend = await _weatherService.getBackendCurrent(
+          _currentPosition!.latitude,
+          _currentPosition!.longitude,
+        );
+        _currentWeather = backend['weather'] as WeatherData;
+        _backendRisk = backend['risk'] as Map<String, dynamic>;
+      } catch (_) {
+        _currentWeather = await _weatherService.getCurrentWeather(
+          _currentPosition!.latitude,
+          _currentPosition!.longitude,
+        );
+      }
 
       // Fetch 5-day forecast
       _forecast = await _weatherService.getForecast(
@@ -235,10 +238,6 @@ class WeatherProvider with ChangeNotifier {
       _updateThemeForWeather();
 
       _setLoading(false);
-      _lastWeatherFetchAt = DateTime.now();
-      await _fetchBackendAssessments();
-      // Also fetch stored alerts from backend
-      await fetchWeatherAlerts(limit: 20);
     } catch (e) {
       _setError('Failed to fetch weather data: ${e.toString()}');
       _setLoading(false);
@@ -282,7 +281,6 @@ class WeatherProvider with ChangeNotifier {
 
       _isLoading = false;
       print('🌤️ WeatherProvider: Weather fetch completed successfully');
-      _lastWeatherFetchAt = DateTime.now();
     } catch (e) {
       print('🌤️ WeatherProvider: Error fetching weather data: ${e.toString()}');
       _errorMessage = 'Failed to fetch weather data: ${e.toString()}';
@@ -292,7 +290,6 @@ class WeatherProvider with ChangeNotifier {
     // Only notify listeners after everything is set
     print('🌤️ WeatherProvider: Notifying listeners...');
     notifyListeners();
-    await _fetchBackendAssessments();
   }
 
   // Fallback location when GPS/location services are unavailable
@@ -386,63 +383,6 @@ class WeatherProvider with ChangeNotifier {
     };
   }
 
-  // Debug/test: simulate weather conditions and fetch backend assessments/alerts
-  Future<void> simulateWeatherConditions({
-    required double temperature,
-    required int humidity,
-    String description = 'clear sky',
-    int cloudiness = 10,
-    double windSpeed = 2.0,
-    double pressure = 1013.0,
-    double? uvIndex,
-  }) async {
-    // Ensure we have a position; use fallback if needed
-    if (_currentPosition == null) {
-      await _useFallbackLocation();
-    }
-
-    // Pick a simple icon based on description
-    String icon = '01d';
-    final desc = description.toLowerCase();
-    if (desc.contains('rain')) {
-      icon = '10d';
-    } else if (desc.contains('cloud')) {
-      icon = '03d';
-    } else if (desc.contains('thunder')) {
-      icon = '11d';
-    } else if (desc.contains('snow')) {
-      icon = '13d';
-    } else if (desc.contains('mist') || desc.contains('fog')) {
-      icon = '50d';
-    }
-
-    _currentWeather = WeatherData(
-      temperature: temperature,
-      feelsLike: temperature,
-      humidity: humidity,
-      pressure: pressure,
-      windSpeed: windSpeed,
-      windDirection: 0,
-      cloudiness: cloudiness,
-      uvIndex: uvIndex,
-      visibility: 10000,
-      description: description,
-      icon: icon,
-      dateTime: DateTime.now(),
-      location: _currentLocation,
-      additionalData: {
-        'simulated': true,
-      },
-    );
-    _lastWeatherFetchAt = DateTime.now();
-    _clearError();
-    notifyListeners();
-
-    // Use the simulated weather in ML assessment to derive alerts
-    await _fetchBackendAssessments();
-    await fetchWeatherAlerts(limit: 20);
-  }
-
   bool get isWeatherFavorableForDisease {
     if (_currentWeather == null) return false;
     
@@ -453,7 +393,7 @@ class WeatherProvider with ChangeNotifier {
   }
 
   String get weatherRiskLevel {
-    if (_currentWeather == null) return _backendRiskLevel ?? 'Unknown';
+    if (_currentWeather == null) return 'Unknown';
     
     final humidity = _currentWeather!.humidity;
     final temp = _currentWeather!.temperature;
@@ -476,30 +416,6 @@ class WeatherProvider with ChangeNotifier {
     } else {
       return 'Low';
     }
-  }
-  
-  // ML availability and formatted outputs
-  bool get hasMlResult {
-    final m = _mlAssessment;
-    if (m == null) return false;
-    final model = (m['modelAssessment'] is Map<String, dynamic>) ? m['modelAssessment'] as Map<String, dynamic> : m;
-    return model['predicted_label'] != null || model['top_probability'] != null || model['probabilities'] != null;
-  }
-
-  String? get mlPredictedLabel {
-    final m = _mlAssessment;
-    if (m == null) return null;
-    final model = (m['modelAssessment'] is Map<String, dynamic>) ? m['modelAssessment'] as Map<String, dynamic> : m;
-    return model['predicted_label'] as String?;
-  }
-
-  double? get mlTopProbability {
-    final m = _mlAssessment;
-    if (m == null) return null;
-    final model = (m['modelAssessment'] is Map<String, dynamic>) ? m['modelAssessment'] as Map<String, dynamic> : m;
-    final p = model['top_probability'];
-    if (p is num) return p.toDouble();
-    return null;
   }
   
   // Get risk description based on risk level
@@ -555,79 +471,7 @@ class WeatherProvider with ChangeNotifier {
   
   // Assess disease risk and refresh weather data
   Future<void> assessDiseaseRisk() async {
-    // If recent weather data exists, avoid refetch to speed up navigation
-    final now = DateTime.now();
-    final isFresh = _lastWeatherFetchAt != null && now.difference(_lastWeatherFetchAt!).inMinutes < 10;
-    if (_currentWeather != null && isFresh) {
-      // Optionally refresh backend ML assessments if stale
-      final mlStale = _lastBackendAssessmentsAt == null || now.difference(_lastBackendAssessmentsAt!).inMinutes >= 15;
-      if (mlStale) {
-        await _fetchBackendAssessments();
-      }
-      return;
-    }
     await fetchWeatherData();
-  }
-  
-  // Fetch backend heuristic and ML assessments
-  Future<void> _fetchBackendAssessments() async {
-    if (_currentPosition == null) return;
-    // Prefer ML assess endpoint which works with provided weather values
-    try {
-      final mlRes = await _weatherService.assessWeatherMl(
-        lat: _currentPosition!.latitude,
-        lon: _currentPosition!.longitude,
-        weather: _currentWeather,
-      );
-      _mlAssessment = mlRes;
-      // Derive backendRiskLevel from heuristic or modelAssessment
-      final heur = (mlRes['heuristic'] as Map<String, dynamic>?) ?? {};
-      final model = (mlRes['modelAssessment'] as Map<String, dynamic>?) ?? {};
-      final rawRisk = (heur['risk_level'] as String?) ?? (model['predicted_label'] as String?);
-      _backendRiskLevel = _normalizeRiskLabel(rawRisk);
-      // Capture any alerts included in ML assessment response
-      final alertsRes = (mlRes['alerts'] as List?) ?? [];
-      _weatherAlerts = alertsRes.map((e) => Map<String, dynamic>.from(e)).toList();
-    } catch (e) {
-      _mlAssessment = null;
-      // Fallback: try legacy backend current endpoint if available
-      try {
-        final currentRes = await _weatherService.getBackendCurrentWeather(
-          _currentPosition!.latitude,
-          _currentPosition!.longitude,
-        );
-        final risk = (currentRes['riskAssessment'] ?? currentRes['risk_assessment']) as Map<String, dynamic>?;
-        _backendRiskLevel = risk != null
-            ? _normalizeRiskLabel((risk['risk_level'] as String?) ?? (risk['riskLevel'] as String?))
-            : null;
-      } catch (_) {
-        _backendRiskLevel = null;
-      }
-    }
-
-    notifyListeners();
-    _lastBackendAssessmentsAt = DateTime.now();
-  }
-
-  // Normalize varied backend risk labels to UI-friendly values
-  String? _normalizeRiskLabel(String? input) {
-    if (input == null) return null;
-    final s = input.toLowerCase().trim();
-    if (s.contains('high')) return 'High';
-    if (s.contains('medium')) return 'Medium';
-    if (s.contains('low')) return 'Low';
-    return null;
-  }
-
-  // Fetch stored weather-triggered disease alerts from backend
-  Future<void> fetchWeatherAlerts({int limit = 20}) async {
-    try {
-      final items = await _weatherService.getBackendWeatherAlerts(limit: limit);
-      _weatherAlerts = items.map((e) => Map<String, dynamic>.from(e as Map)).toList();
-      notifyListeners();
-    } catch (e) {
-      // Keep existing alerts on failure; optionally log error
-    }
   }
   
   // Public method to initialize location
@@ -657,6 +501,101 @@ class WeatherProvider with ChangeNotifier {
       _setError('Failed to refresh location: ${e.toString()}');
     } finally {
       _setLoading(false);
+    }
+  }
+
+  // Fetch weather alerts for current location
+  Future<void> fetchWeatherAlerts({int limit = 20}) async {
+    if (_currentPosition == null) {
+      try {
+        await _initializeLocation();
+      } catch (_) {}
+    }
+
+    if (_currentPosition == null) {
+      _setError('Location not available for alerts');
+      _weatherAlerts = [];
+      notifyListeners();
+      return;
+    }
+
+    try {
+      final data = await _weatherService.getWeatherAlerts(
+        _currentPosition!.latitude,
+        _currentPosition!.longitude,
+      );
+
+      final rawAlerts = (data['alerts'] as List?) ?? [];
+      // Map OpenWeather alert structure to UI-friendly shape
+      final mapped = rawAlerts.map<Map<String, dynamic>>((a) {
+        final event = a['event']?.toString() ?? 'Weather Alert';
+        final description = a['description']?.toString() ?? '';
+        final tags = (a['tags'] as List?)?.map((e) => e.toString().toLowerCase()).toList() ?? const [];
+        final start = (a['start'] is int) ? DateTime.fromMillisecondsSinceEpoch((a['start'] as int) * 1000).toIso8601String() : null;
+
+        // Basic severity heuristic
+        String severity = 'low';
+        final eventLower = event.toLowerCase();
+        if (tags.contains('thunderstorm') || tags.contains('severe') || eventLower.contains('storm')) {
+          severity = 'high';
+        } else if (tags.contains('rain') || tags.contains('snow') || eventLower.contains('rain') || eventLower.contains('snow')) {
+          severity = 'medium';
+        }
+
+        return {
+          'title': event,
+          'message': description,
+          'severity': severity,
+          'createdAt': start,
+          'source': 'OpenWeather',
+        };
+      }).toList();
+
+      _weatherAlerts = mapped.take(limit).toList();
+      _clearError();
+      notifyListeners();
+    } catch (e) {
+      _setError('Failed to fetch weather alerts');
+      _weatherAlerts = [];
+      notifyListeners();
+    }
+  }
+
+  // Simulate weather conditions (debug)
+  Future<void> simulateWeatherConditions({
+    required double temperature,
+    required int humidity,
+    required String description,
+    required int cloudiness,
+    required double windSpeed,
+    required double pressure,
+  }) async {
+    try {
+      final now = DateTime.now();
+      final location = _currentLocation ?? 'Simulated';
+      _currentWeather = WeatherData(
+        temperature: temperature,
+        feelsLike: temperature,
+        humidity: humidity,
+        pressure: pressure,
+        windSpeed: windSpeed,
+        windDirection: 0,
+        cloudiness: cloudiness,
+        uvIndex: null,
+        visibility: null,
+        description: description,
+        icon: '01d',
+        dateTime: now,
+        location: location,
+        additionalData: {
+          'simulated': true,
+        },
+      );
+      _updateThemeForWeather();
+      _clearError();
+      notifyListeners();
+    } catch (e) {
+      _setError('Failed to simulate weather conditions');
     }
   }
 

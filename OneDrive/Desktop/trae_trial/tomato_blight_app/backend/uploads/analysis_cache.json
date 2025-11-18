@@ -1,0 +1,351 @@
+{
+  "28ed46266d87124753f895eb04cbe0cc5589aebe": {
+    "ts": 1761923408517,
+    "result": {
+      "disease": "leaf_mold",
+      "confidence": 0.9996525049209595,
+      "processedAt": "2025-10-31T15:10:08.889Z",
+      "modelUsed": "hybrid_densenet121",
+      "all_predictions": {
+        "healthy": 0.0002901497355196625,
+        "early_blight": 0.000013143121577741113,
+        "late_blight": 1.0644856551778048e-8,
+        "bacterial_spot": 0.00003448297502472997,
+        "mosaic_virus": 7.94442911455917e-8,
+        "yellow_virus": 0.000009203798072121572,
+        "leaf_mold": 0.9996525049209595,
+        "septoria_leaf_spot": 4.855889983446104e-7
+      }
+    }
+  },
+  "0c3a855be546627d409ea0252343325f31c528a5": {
+    "ts": 1761756478114,
+    "result": {
+      "disease": "bacterial_spot",
+      "confidence": 0.4965589642524719,
+      "processedAt": "2025-10-29T16:48:21.787Z",
+      "modelUsed": "hybrid_densenet121",
+      "all_predictions": {
+        "healthy": 0.37541159987449646,
+        "early_blight": 0.07670339941978455,
+        "late_blight": 0.0007673678337596357,
+        "bacterial_spot": 0.4965589642524719,
+        "mosaic_virus": 0.009311685338616371,
+        "yellow_virus": 0.002117689698934555,
+        "leaf_mold": 0.03875892981886864,
+        "septoria_leaf_spot": 0.0003704142291098833
+      }
+    }
+  },
+  "a84f14a76d0673279ff7a3e4106d25b1c1910e8e": {
+    "ts": 1761756791559,
+    "result": {
+      "disease": "early_blight",
+      "confidence": 0.8881502747535706,
+      "processedAt": "2025-10-29T16:53:34.563Z",
+      "modelUsed": "hybrid_densenet121",
+      "all_predictions": {
+        "healthy": 0.09089751541614532,
+        "early_blight": 0.8881502747535706,
+        "late_blight": 0.00038639610284008086,
+        "bacterial_spot": 0.0025874848943203688,
+        "mosaic_virus": 0.0029006917029619217,
+        "yellow_virus": 0.00019187024736311287,
+        "leaf_mold": 0.012998610734939575,
+        "septoria_leaf_spot": 0.0018871272914111614
+      }
+    }
+  },
+  "4f4554cedd91b753ae53271702bbed90bf6081e9": {
+    "ts": 1761756823388,
+    "result": {
+      "disease": "leaf_mold",
+      "confidence": 0.9957953691482544,
+      "processedAt": "2025-10-29T16:54:05.341Z",
+      "modelUsed": "hybrid_densenet121",
+      "all_predictions": {
+        "healthy": 0.0039821709506213665,
+        "early_blight": 0.00015469154459424317,
+        "late_blight": 6.623542248007652e-8,
+        "bacterial_spot": 0.00005933272768743336,
+        "mosaic_virus": 0.0000020464410681597656,
+        "yellow_virus": 0.0000048818451432453,
+        "leaf_mold": 0.9957953691482544,
+        "septoria_leaf_spot": 0.0000014120519153948408
+      }
+    }
+  },
+  "8084929d16272bc54a366e4ce0fd7b909679f83f": {
+    "ts": 1761765679286,
+    "result": {
+      "disease": "bacterial_spot",
+      "confidence": 0.9958735108375549,
+      "processedAt": "2025-10-29T19:21:43.715Z",
+      "modelUsed": "hybrid_densenet121",
+      "all_predictions": {
+        "healthy": 0.00013139788643456995,
+        "early_blight": 0.00012005002645310014,
+        "late_blight": 0.002131739631295204,
+        "bacterial_spot": 0.9958735108375549,
+        "mosaic_virus": 0.001663370057940483,
+        "yellow_virus": 0.0000230407476919936,
+        "leaf_mold": 0.00004622483174898662,
+        "septoria_leaf_spot": 0.000010740835932665505
+      }
+    }
+  },
+  "9c4a5288afff351309050d368be1a754e4e2f033": {
+    "ts": 1761920141249,
+    "result": {
+      "disease": "early_blight",
+      "confidence": 0.6162142753601074,
+      "processedAt": "2025-10-31T14:15:41.662Z",
+      "modelUsed": "hybrid_densenet121",
+      "all_predictions": {
+        "healthy": 0.07123564928770065,
+        "early_blight": 0.6162142753601074,
+        "late_blight": 0.0006795550580136478,
+        "bacterial_spot": 0.27254757285118103,
+        "mosaic_virus": 0.006199212279170752,
+        "yellow_virus": 0.004817574750632048,
+        "leaf_mold": 0.027632376179099083,
+        "septoria_leaf_spot": 0.0006738309166394174
+      }
+    }
+  },
+  "e9ec3e781dbfe3f4512b1708d17b8b7139dfaaea": {
+    "ts": 1761765951750,
+    "result": {
+      "disease": "leaf_mold",
+      "confidence": 0.5304666757583618,
+      "processedAt": "2025-10-29T19:26:16.351Z",
+      "modelUsed": "hybrid_densenet121",
+      "all_predictions": {
+        "healthy": 0.10224571824073792,
+        "early_blight": 0.03301696851849556,
+        "late_blight": 0.006977628450840712,
+        "bacterial_spot": 0.14993897080421448,
+        "mosaic_virus": 0.0006749499589204788,
+        "yellow_virus": 0.014729704707860947,
+        "leaf_mold": 0.5304666757583618,
+        "septoria_leaf_spot": 0.16194942593574524
+      }
+    }
+  },
+  "c481f907daea3bea59651ee145ef55e5c5f6b299": {
+    "ts": 1761798250803,
+    "result": {
+      "disease": "yellow_virus",
+      "confidence": 0.39747756719589233,
+      "processedAt": "2025-10-30T04:24:44.043Z",
+      "modelUsed": "hybrid_densenet121",
+      "all_predictions": {
+        "healthy": 0.05777581408619881,
+        "early_blight": 0.11585327982902527,
+        "late_blight": 0.005322165321558714,
+        "bacterial_spot": 0.09692708402872086,
+        "mosaic_virus": 0.07870088517665863,
+        "yellow_virus": 0.39747756719589233,
+        "leaf_mold": 0.1025460883975029,
+        "septoria_leaf_spot": 0.1453971266746521
+      }
+    }
+  },
+  "350d8c14a7d681d7bc01fd20fb9861b8052e90f6": {
+    "ts": 1762841510185,
+    "result": {
+      "disease": "early_blight",
+      "confidence": 0.12839552760124207,
+      "processedAt": "2025-11-11T06:11:50.522Z",
+      "modelUsed": "ensemble_model",
+      "all_predictions": {
+        "healthy": 0.12366332113742828,
+        "early_blight": 0.12839552760124207,
+        "late_blight": 0.12503138184547424,
+        "bacterial_spot": 0.125323086977005,
+        "mosaic_virus": 0.12551270425319672,
+        "yellow_virus": 0.12215548753738403,
+        "leaf_mold": 0.1254488229751587,
+        "septoria_leaf_spot": 0.12446969747543335
+      }
+    }
+  },
+  "7010a5eb22b3da3350a98a1a081b92d78970fc1d": {
+    "ts": 1761822163629,
+    "result": {
+      "disease": "mosaic_virus",
+      "confidence": 0.9982733726501465,
+      "processedAt": "2025-10-30T11:02:44.067Z",
+      "modelUsed": "hybrid_densenet121",
+      "all_predictions": {
+        "healthy": 0.00006195175228640437,
+        "early_blight": 0.00023765866353642195,
+        "late_blight": 0.000004036487553094048,
+        "bacterial_spot": 0.001421018852852285,
+        "mosaic_virus": 0.9982733726501465,
+        "yellow_virus": 1.4592244212963124e-7,
+        "leaf_mold": 0.000001571383450027497,
+        "septoria_leaf_spot": 2.629714401791716e-7
+      }
+    }
+  },
+  "b8053db13911991fd804479d2f704ecd1769b533": {
+    "ts": 1761820308223,
+    "result": {
+      "error": "predict_failed",
+      "details": "No suitable Python runtime found\r\nPass --list (-0) to see all detected environments on your machine\r\nor set environment variable PYLAUNCHER_ALLOW_INSTALL to use winget\r\nor open the Microsoft Store to the requested version.\r\n"
+    }
+  },
+  "a16e52f627c398c11fbf4054fda3478e0024d36c": {
+    "ts": 1761821509426,
+    "result": {
+      "disease": "early_blight",
+      "confidence": 0.5348608493804932,
+      "processedAt": "2025-10-30T10:52:38.468Z",
+      "modelUsed": "hybrid_densenet121",
+      "all_predictions": {
+        "healthy": 0.06622623652219772,
+        "early_blight": 0.5348608493804932,
+        "late_blight": 0.0006669575814157724,
+        "bacterial_spot": 0.35901719331741333,
+        "mosaic_virus": 0.00671642879024148,
+        "yellow_virus": 0.005564864259213209,
+        "leaf_mold": 0.026285935193300247,
+        "septoria_leaf_spot": 0.0006614744197577238
+      }
+    }
+  },
+  "9b7f54451f65c95a4ea3ba0faeb57e5823ca2166": {
+    "ts": 1761923339700,
+    "result": {
+      "disease": "leaf_mold",
+      "confidence": 0.908882737159729,
+      "processedAt": "2025-10-31T15:09:00.056Z",
+      "modelUsed": "hybrid_densenet121",
+      "all_predictions": {
+        "healthy": 0.0772540345788002,
+        "early_blight": 0.010916509665548801,
+        "late_blight": 0.0000889822913450189,
+        "bacterial_spot": 0.000016414813217124902,
+        "mosaic_virus": 0.002467506332322955,
+        "yellow_virus": 0.0002565990143921226,
+        "leaf_mold": 0.908882737159729,
+        "septoria_leaf_spot": 0.00011715177970472723
+      }
+    }
+  },
+  "2b3b63ec3d33d41be0ad82c7dfc59184279851a0": {
+    "ts": 1762841489124,
+    "result": {
+      "disease": "early_blight",
+      "confidence": 0.1282634735107422,
+      "processedAt": "2025-11-11T06:11:29.492Z",
+      "modelUsed": "ensemble_model",
+      "all_predictions": {
+        "healthy": 0.12383498251438141,
+        "early_blight": 0.1282634735107422,
+        "late_blight": 0.12494625896215439,
+        "bacterial_spot": 0.12520547211170197,
+        "mosaic_virus": 0.1254584789276123,
+        "yellow_virus": 0.12230455875396729,
+        "leaf_mold": 0.12536191940307617,
+        "septoria_leaf_spot": 0.12462487816810608
+      }
+    }
+  },
+  "8d0b85a587bad688e85afa4cfcfc9ad65cae8266": {
+    "ts": 1761923297504,
+    "result": {
+      "disease": "leaf_mold",
+      "confidence": 0.7148367166519165,
+      "processedAt": "2025-10-31T15:08:17.851Z",
+      "modelUsed": "hybrid_densenet121",
+      "all_predictions": {
+        "healthy": 0.07637052237987518,
+        "early_blight": 0.2087702602148056,
+        "late_blight": 0.000002718903033382958,
+        "bacterial_spot": 0.00000887356509338133,
+        "mosaic_virus": 0.0000026156462809012737,
+        "yellow_virus": 0.0000010813740800585947,
+        "leaf_mold": 0.7148367166519165,
+        "septoria_leaf_spot": 0.000007207520866359118
+      }
+    }
+  },
+  "49dab0007fedc5a5627f646648a1b17f692d659a": {
+    "ts": 1761822524386,
+    "result": {
+      "disease": "early_blight",
+      "confidence": 0.9307126402854919,
+      "processedAt": "2025-10-30T11:08:44.977Z",
+      "modelUsed": "hybrid_densenet121",
+      "all_predictions": {
+        "healthy": 0.007687424309551716,
+        "early_blight": 0.9307126402854919,
+        "late_blight": 0.004088185261934996,
+        "bacterial_spot": 0.008546479046344757,
+        "mosaic_virus": 0.0031985649839043617,
+        "yellow_virus": 0.0014326745877042413,
+        "leaf_mold": 0.04203275218605995,
+        "septoria_leaf_spot": 0.00230127084068954
+      }
+    }
+  },
+  "32e291488330143f86be9369972ccc09dbdf7b1d": {
+    "ts": 1762841295385,
+    "result": {
+      "disease": "early_blight",
+      "confidence": 0.1308404803276062,
+      "processedAt": "2025-11-11T06:08:43.043Z",
+      "modelUsed": "ensemble_model::DenseNet121+MobileNetV2",
+      "all_predictions": {
+        "healthy": 0.12327862530946732,
+        "early_blight": 0.1308404803276062,
+        "late_blight": 0.12490648031234741,
+        "bacterial_spot": 0.12502580881118774,
+        "mosaic_virus": 0.1256740689277649,
+        "yellow_virus": 0.11986416578292847,
+        "leaf_mold": 0.1260848492383957,
+        "septoria_leaf_spot": 0.12432549893856049
+      }
+    }
+  },
+  "1e38336ab9dc2f395efeb6e2e182500be14335f7": {
+    "ts": 1762841377052,
+    "result": {
+      "disease": "early_blight",
+      "confidence": 0.12821966409683228,
+      "processedAt": "2025-11-11T06:09:37.257Z",
+      "modelUsed": "ensemble_model",
+      "all_predictions": {
+        "healthy": 0.12384330481290817,
+        "early_blight": 0.12821966409683228,
+        "late_blight": 0.1249149739742279,
+        "bacterial_spot": 0.12531155347824097,
+        "mosaic_virus": 0.1253909468650818,
+        "yellow_virus": 0.12250815331935883,
+        "leaf_mold": 0.12531259655952454,
+        "septoria_leaf_spot": 0.12449885159730911
+      }
+    }
+  },
+  "fd1beab8bf1deed90452efa5f8514da4725632b9": {
+    "ts": 1762841534482,
+    "result": {
+      "disease": "early_blight",
+      "confidence": 0.12950797379016876,
+      "processedAt": "2025-11-11T06:12:14.798Z",
+      "modelUsed": "ensemble_model",
+      "all_predictions": {
+        "healthy": 0.12354311347007751,
+        "early_blight": 0.12950797379016876,
+        "late_blight": 0.12492317706346512,
+        "bacterial_spot": 0.1251429319381714,
+        "mosaic_virus": 0.1254873126745224,
+        "yellow_virus": 0.1208299994468689,
+        "leaf_mold": 0.12603908777236938,
+        "septoria_leaf_spot": 0.12452635169029236
+      }
+    }
+  }
+}

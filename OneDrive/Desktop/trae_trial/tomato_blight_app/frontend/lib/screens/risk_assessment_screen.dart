@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/weather_provider.dart';
 import '../providers/disease_provider.dart';
+import '../models/disease_model.dart';
+import '../models/weather_model.dart';
 import '../widgets/back_arrow.dart';
 import '../widgets/tomato_gradient_scaffold.dart';
 import '../utils/constants.dart';
@@ -64,7 +66,7 @@ class _RiskAssessmentScreenState extends State<RiskAssessmentScreen> {
           Expanded(
             child: Consumer2<WeatherProvider, DiseaseProvider>(
               builder: (context, weatherProvider, diseaseProvider, child) {
-                if (_isInitializing || weatherProvider.isLoading || diseaseProvider.isLoading) {
+                if (_isInitializing || weatherProvider.isLoading) {
                   return const Center(
                     child: CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
@@ -72,7 +74,7 @@ class _RiskAssessmentScreenState extends State<RiskAssessmentScreen> {
                   );
                 }
 
-                if (weatherProvider.errorMessage != null || diseaseProvider.errorMessage != null) {
+                if (weatherProvider.errorMessage != null) {
                   return _buildErrorState(weatherProvider, diseaseProvider);
                 }
 
@@ -345,20 +347,31 @@ class _RiskAssessmentScreenState extends State<RiskAssessmentScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: UIConstants.paddingSmall),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 16,
-              color: AppColors.textSecondary,
+          const SizedBox(width: UIConstants.paddingSmall),
+          Expanded(
+            flex: 3,
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 16,
+                color: AppColors.textSecondary,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              softWrap: true,
             ),
           ),
         ],
@@ -399,7 +412,7 @@ class _RiskAssessmentScreenState extends State<RiskAssessmentScreen> {
             ),
             const SizedBox(height: UIConstants.paddingLarge),
             if (diseases.isNotEmpty && weather != null) ...[
-              ...diseases.map((disease) => _buildDiseaseRiskItem(disease, weather)),
+              ...diseases.map((d) => _buildDiseaseRiskItem(d, weather)),
             ] else
               const Text(
                 'Disease risk data unavailable',
@@ -414,7 +427,7 @@ class _RiskAssessmentScreenState extends State<RiskAssessmentScreen> {
     );
   }
 
-  Widget _buildDiseaseRiskItem(dynamic disease, dynamic weather) {
+  Widget _buildDiseaseRiskItem(Disease disease, WeatherData weather) {
     // Calculate risk based on weather conditions
     final riskLevel = _calculateDiseaseRisk(disease, weather);
     Color riskColor;
@@ -444,7 +457,7 @@ class _RiskAssessmentScreenState extends State<RiskAssessmentScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  disease['name'] ?? 'Unknown Disease',
+                  disease.name,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

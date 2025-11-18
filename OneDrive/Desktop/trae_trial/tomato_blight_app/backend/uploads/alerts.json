@@ -1,0 +1,197 @@
+[
+  {
+    "id": "alert_early_blight_1761753887495",
+    "diseaseId": "early_blight",
+    "diseaseName": "Early Blight",
+    "message": "Disease 'Early Blight' risk conditions detected — check your plants.",
+    "riskLevel": "High Risk",
+    "weatherSnapshot": {
+      "temperature": 25,
+      "humidity": 75,
+      "pressure": 1013,
+      "description": null,
+      "location": null
+    },
+    "timestamp": "2025-10-29T16:04:47.495Z"
+  },
+  {
+    "id": "alert_septoria_leaf_spot_1761753887495",
+    "diseaseId": "septoria_leaf_spot",
+    "diseaseName": "Septoria Leaf Spot",
+    "message": "Disease 'Septoria Leaf Spot' risk conditions detected — check your plants.",
+    "riskLevel": "High Risk",
+    "weatherSnapshot": {
+      "temperature": 25,
+      "humidity": 75,
+      "pressure": 1013,
+      "description": null,
+      "location": null
+    },
+    "timestamp": "2025-10-29T16:04:47.495Z"
+  },
+  {
+    "id": "alert_bacterial_spot_1761753887495",
+    "diseaseId": "bacterial_spot",
+    "diseaseName": "Bacterial Spot",
+    "message": "Disease 'Bacterial Spot' risk conditions detected — check your plants.",
+    "riskLevel": "High Risk",
+    "weatherSnapshot": {
+      "temperature": 25,
+      "humidity": 75,
+      "pressure": 1013,
+      "description": null,
+      "location": null
+    },
+    "timestamp": "2025-10-29T16:04:47.495Z"
+  },
+  {
+    "id": "alert_early_blight_1761797695416",
+    "diseaseId": "early_blight",
+    "diseaseName": "Early Blight",
+    "message": "Disease 'Early Blight' risk conditions detected — check your plants.",
+    "riskLevel": "High Risk",
+    "weatherSnapshot": {
+      "temperature": 25,
+      "humidity": 75,
+      "pressure": 1013,
+      "description": null,
+      "location": null
+    },
+    "timestamp": "2025-10-30T04:14:55.416Z"
+  },
+  {
+    "id": "alert_septoria_leaf_spot_1761797695416",
+    "diseaseId": "septoria_leaf_spot",
+    "diseaseName": "Septoria Leaf Spot",
+    "message": "Disease 'Septoria Leaf Spot' risk conditions detected — check your plants.",
+    "riskLevel": "High Risk",
+    "weatherSnapshot": {
+      "temperature": 25,
+      "humidity": 75,
+      "pressure": 1013,
+      "description": null,
+      "location": null
+    },
+    "timestamp": "2025-10-30T04:14:55.416Z"
+  },
+  {
+    "id": "alert_bacterial_spot_1761797695416",
+    "diseaseId": "bacterial_spot",
+    "diseaseName": "Bacterial Spot",
+    "message": "Disease 'Bacterial Spot' risk conditions detected — check your plants.",
+    "riskLevel": "High Risk",
+    "weatherSnapshot": {
+      "temperature": 25,
+      "humidity": 75,
+      "pressure": 1013,
+      "description": null,
+      "location": null
+    },
+    "timestamp": "2025-10-30T04:14:55.416Z"
+  },
+  {
+    "id": "alert_early_blight_1761917832514",
+    "diseaseId": "early_blight",
+    "diseaseName": "Early Blight",
+    "message": "Disease 'Early Blight' risk conditions detected — check your plants.",
+    "riskLevel": "High Risk",
+    "weatherSnapshot": {
+      "temperature": 25,
+      "humidity": 75,
+      "pressure": 1013,
+      "description": null,
+      "location": null
+    },
+    "timestamp": "2025-10-31T13:37:12.514Z"
+  },
+  {
+    "id": "alert_septoria_leaf_spot_1761917832514",
+    "diseaseId": "septoria_leaf_spot",
+    "diseaseName": "Septoria Leaf Spot",
+    "message": "Disease 'Septoria Leaf Spot' risk conditions detected — check your plants.",
+    "riskLevel": "High Risk",
+    "weatherSnapshot": {
+      "temperature": 25,
+      "humidity": 75,
+      "pressure": 1013,
+      "description": null,
+      "location": null
+    },
+    "timestamp": "2025-10-31T13:37:12.514Z"
+  },
+  {
+    "id": "alert_bacterial_spot_1761917832514",
+    "diseaseId": "bacterial_spot",
+    "diseaseName": "Bacterial Spot",
+    "message": "Disease 'Bacterial Spot' risk conditions detected — check your plants.",
+    "riskLevel": "High Risk",
+    "weatherSnapshot": {
+      "temperature": 25,
+      "humidity": 75,
+      "pressure": 1013,
+      "description": null,
+      "location": null
+    },
+    "timestamp": "2025-10-31T13:37:12.514Z"
+  },
+  {
+    "id": "alert_early_blight_1761982510877",
+    "diseaseId": "early_blight",
+    "diseaseName": "Early Blight",
+    "message": "Disease 'Early Blight' risk conditions detected — check your plants.",
+    "riskLevel": "High Risk",
+    "weatherSnapshot": {
+      "temperature": 25,
+      "humidity": 75,
+      "pressure": 1013,
+      "description": null,
+      "location": null
+    },
+    "timestamp": "2025-11-01T07:35:10.877Z"
+  },
+  {
+    "id": "alert_septoria_leaf_spot_1761982510877",
+    "diseaseId": "septoria_leaf_spot",
+    "diseaseName": "Septoria Leaf Spot",
+    "message": "Disease 'Septoria Leaf Spot' risk conditions detected — check your plants.",
+    "riskLevel": "High Risk",
+    "weatherSnapshot": {
+      "temperature": 25,
+      "humidity": 75,
+      "pressure": 1013,
+      "description": null,
+      "location": null
+    },
+    "timestamp": "2025-11-01T07:35:10.877Z"
+  },
+  {
+    "id": "alert_bacterial_spot_1761982510877",
+    "diseaseId": "bacterial_spot",
+    "diseaseName": "Bacterial Spot",
+    "message": "Disease 'Bacterial Spot' risk conditions detected — check your plants.",
+    "riskLevel": "High Risk",
+    "weatherSnapshot": {
+      "temperature": 25,
+      "humidity": 75,
+      "pressure": 1013,
+      "description": null,
+      "location": null
+    },
+    "timestamp": "2025-11-01T07:35:10.877Z"
+  },
+  {
+    "id": "alert_bacterial_spot_1762840967629",
+    "diseaseId": "bacterial_spot",
+    "diseaseName": "Bacterial Spot",
+    "message": "Disease 'Bacterial Spot' risk conditions detected — check your plants.",
+    "riskLevel": "Medium Risk",
+    "weatherSnapshot": {
+      "temperature": 24.5,
+      "humidity": 65,
+      "pressure": 1013,
+      "description": null,
+      "location": null
+    },
+    "timestamp": "2025-11-11T06:02:47.629Z"
+  }
+]

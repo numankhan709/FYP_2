@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import '../services/splash_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,6 +8,7 @@ import 'dart:io';
 import '../providers/auth_provider.dart';
 import '../providers/weather_provider.dart';
 import '../providers/disease_provider.dart';
+import '../models/scan_result_model.dart';
 import '../providers/theme_provider.dart';
 import '../utils/constants.dart';
 import '../utils/helpers.dart';
@@ -28,6 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _initializeData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _maybeShowWelcome();
+    });
   }
 
   Future<void> _initializeData() async {
@@ -45,6 +50,95 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _refreshData() async {
     final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
     await weatherProvider.refreshWeatherData();
+  }
+
+  Future<void> _maybeShowWelcome() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final userName = authProvider.currentUser?.name ?? 'User';
+    final shouldShow = await SplashService.shouldShowWelcomeSplash();
+    if (!shouldShow) return;
+    if (!mounted) return;
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        final theme = Theme.of(context);
+        final primary = theme.primaryColor;
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppColors.primaryLight,
+                  AppColors.accentGoldLight.withOpacity(0.8),
+                  AppColors.secondaryLight.withOpacity(0.6),
+                ],
+                stops: const [0.0, 0.6, 1.0],
+              ),
+              borderRadius: BorderRadius.circular(24),
+            ),
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 72,
+                  height: 72,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(18),
+                    boxShadow: [
+                      BoxShadow(
+                        color: primary.withOpacity(0.25),
+                        blurRadius: 18,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(Icons.emoji_nature, color: Color(0xFF228B22), size: 36),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Welcome, ${userName.split(' ').first}! ',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: const Color(UIConstants.textColorValue),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Glad to have you here. Let’s protect your tomatoes!',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF228B22),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: const Text('Let’s start'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    await SplashService.markWelcomeSplashShown();
   }
 
   String _getProfileImageUrl(String? profileImage) {
@@ -358,6 +452,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Scaffold.of(context).openDrawer();
                 },
                 child: CircleAvatar(
+                  key: ValueKey('appbar_avatar_${user?.profileImage ?? 'default'}'),
                   backgroundColor: isDark 
                     ? const Color(UIConstants.darkBackgroundColorValue) 
                     : Colors.white,
@@ -1016,56 +1111,76 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildScanItem(dynamic scan) {
-    // This would be properly typed with ScanResult model
-    return Container(
+  Widget _buildScanItem(ScanResult scan) {
+    return Card(
       margin: const EdgeInsets.only(bottom: UIConstants.paddingSmall),
-      padding: const EdgeInsets.all(UIConstants.paddingMedium),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
+      child: InkWell(
+        onTap: () => context.push(RouteConstants.history),
         borderRadius: BorderRadius.circular(UIConstants.borderRadiusMedium),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(UIConstants.borderRadiusSmall),
-            ),
-            child: Icon(
-              Icons.local_florist,
-              color: Theme.of(context).primaryColor,
-            ),
-          ),
-          const SizedBox(width: UIConstants.paddingMedium),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Plant Scan',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+        child: Padding(
+          padding: const EdgeInsets.all(UIConstants.paddingMedium),
+          child: Row(
+            children: [
+              // Thumbnail image
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(UIConstants.borderRadiusSmall),
+                  color: AppColors.neutralLight,
                 ),
-                Text(
-                  DateTimeHelper.formatRelativeTime(DateTime.now()),
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 12,
-                  ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(UIConstants.borderRadiusSmall),
+                  child: scan.imagePath.isNotEmpty
+                      ? kIsWeb
+                          ? const Icon(
+                              Icons.image,
+                              color: AppColors.textSecondary,
+                            )
+                          : Image.file(
+                              File(scan.imagePath),
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  Icons.broken_image,
+                                  color: AppColors.textSecondary,
+                                );
+                              },
+                            )
+                      : const Icon(
+                          Icons.image,
+                          color: AppColors.textSecondary,
+                        ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: UIConstants.paddingMedium),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Plant Scan',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      DateTimeHelper.formatRelativeTime(scan.scanDate),
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                color: Colors.grey[400],
+              ),
+            ],
           ),
-          Icon(
-            Icons.chevron_right,
-            color: Colors.grey[400],
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -1342,7 +1457,7 @@ class _HomeScreenState extends State<HomeScreen> {
                Expanded(
                  child: AnimatedList(
                    padding: EdgeInsets.zero,
-                   initialItemCount: 7,
+                   initialItemCount: 6,
                    itemBuilder: (context, index, animation) {
                      return SlideTransition(
                        position: animation.drive(
@@ -1399,15 +1514,6 @@ class _HomeScreenState extends State<HomeScreen> {
          );
        case 3:
          return _buildDrawerItem(
-           icon: Icons.picture_as_pdf,
-           title: 'Report',
-           onTap: () {
-             Navigator.pop(context);
-             context.push(RouteConstants.reports);
-           },
-         );
-       case 4:
-         return _buildDrawerItem(
            icon: Icons.info_outline,
            title: 'About',
            onTap: () {
@@ -1415,22 +1521,45 @@ class _HomeScreenState extends State<HomeScreen> {
              _showAboutDialog();
            },
          );
-       case 5:
+       case 4:
          return const Divider();
-       case 6:
+       case 5:
          return _buildDrawerItem(
            icon: Icons.logout,
            title: 'Logout',
            color: AppColors.primaryRed, // Using green instead of red
            onTap: () async {
-             final navigator = Navigator.of(context);
-             final goRouter = GoRouter.of(context);
-             final authProvider = Provider.of<AuthProvider>(context, listen: false);
-             await authProvider.logout();
-             if (mounted) {
-               navigator.pop();
-               goRouter.go(RouteConstants.login);
-             }
+             // Ask for confirmation before logging out
+             final shouldLogout = await showDialog<bool>(
+                   context: context,
+                   builder: (context) => AlertDialog(
+                     title: const Text('Logout'),
+                     content: const Text('Are you sure you want to logout?'),
+                     actions: [
+                       TextButton(
+                         onPressed: () => Navigator.of(context).pop(false),
+                         child: const Text('No'),
+                       ),
+                       ElevatedButton(
+                         onPressed: () => Navigator.of(context).pop(true),
+                         child: const Text('Yes'),
+                       ),
+                     ],
+                   ),
+                 ) ?? false;
+
+             if (!shouldLogout) return;
+
+            final navigator = Navigator.of(context);
+            final goRouter = GoRouter.of(context);
+            final authProvider = Provider.of<AuthProvider>(context, listen: false);
+            // Reset welcome splash status so it shows on next login/signup
+            await SplashService.resetWelcomeSplashStatus();
+            await authProvider.logout();
+            if (mounted) {
+              navigator.pop();
+              goRouter.go(RouteConstants.login);
+            }
            },
          );
        default:
@@ -1504,10 +1633,12 @@ class _HomeScreenState extends State<HomeScreen> {
      );
    }
 
-   void _openProfilePage() {
+  void _openProfilePage() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      isDismissible: false,
+      useRootNavigator: true,
       backgroundColor: Colors.transparent,
       builder: (context) => ProfileEditModal(),
     );
@@ -1757,40 +1888,6 @@ class _ProfileEditModalState extends State<ProfileEditModal> {
   Future<void> _saveProfile() async {
     if (!_formKey.currentState!.validate()) return;
 
-    // Show loading splash screen as full-screen overlay
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 8),
-              const CircularProgressIndicator(),
-              const SizedBox(height: 16),
-              Text(
-                'Updating Profile',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Please wait while we save your changes...',
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-
     setState(() {
       _isLoading = true;
     });
@@ -1798,44 +1895,48 @@ class _ProfileEditModalState extends State<ProfileEditModal> {
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       
-      // Add a minimum delay to show the loading screen
-      await Future.wait([
-        authProvider.updateProfile(
-          name: _nameController.text.trim(),
-          email: null, // Don't allow email changes
-          profileImage: _selectedImage,
-        ),
-        Future.delayed(const Duration(milliseconds: 1500)), // Minimum loading time
-      ]);
+      // Call updateProfile and keep a short minimum loading delay
+      final success = await authProvider.updateProfile(
+        name: _nameController.text.trim(),
+        email: null, // Don't allow email changes
+        profileImage: _selectedImage,
+      );
+      await Future.delayed(const Duration(milliseconds: 1500));
 
       if (mounted) {
-        // Close loading dialog
-        Navigator.of(context).pop();
-        
-        // Update original values after successful save
-        _originalName = _nameController.text.trim();
-        if (_selectedImage != null) {
-          _originalImagePath = _selectedImage!.path;
+
+        if (success) {
+          // Update original values after successful save
+          _originalName = _nameController.text.trim();
+          // Use server-provided image path and clear local selection
+          _originalImagePath = authProvider.currentUser?.profileImage;
+          setState(() {
+            _selectedImage = null;
+            _hasChanges = false;
+          });
+
+          Provider.of<AuthProvider>(context, listen: false).refresh();
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Profile updated successfully!'),
+              backgroundColor: AppColors.success,
+            ),
+          );
+        } else {
+          // Keep the sheet open and show error
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                authProvider.errorMessage ?? 'Profile update failed. Please try again.',
+              ),
+              backgroundColor: AppColors.error,
+            ),
+          );
         }
-        
-        // Reset change tracking
-        setState(() {
-          _hasChanges = false;
-        });
-        
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Profile updated successfully!'),
-            backgroundColor: AppColors.primaryRed,
-          ),
-        );
       }
     } catch (e) {
       if (mounted) {
-        // Close loading dialog
-        Navigator.of(context).pop();
-        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error updating profile: $e'),
@@ -1854,16 +1955,18 @@ class _ProfileEditModalState extends State<ProfileEditModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-      ),
-      child: Column(
+    return Stack(
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.height * 0.85,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
         children: [
           // Handle bar
           Container(
@@ -2030,7 +2133,18 @@ class _ProfileEditModalState extends State<ProfileEditModal> {
             ),
           ),
         ],
-      ),
+          ),
+        ),
+        if (_isLoading)
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withOpacity(0.15),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ),
+      ],
     );
   }
 

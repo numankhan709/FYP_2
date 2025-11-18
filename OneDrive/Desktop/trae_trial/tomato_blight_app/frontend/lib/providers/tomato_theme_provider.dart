@@ -385,69 +385,43 @@ class TomatoThemeProvider extends ChangeNotifier {
     return MaterialColor(color.value, swatch);
   }
 
-  // Method to get professional gradient for backgrounds (theme-aware)
-  static BoxDecoration getProfessionalGradientDecoration(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
-
-    // In dark mode, use subtle surface/background gradient with a soft primary tint.
-    // In light mode, keep the vibrant brand gradient.
-    final List<Color> colors = isDark
-        ? [
-            scheme.surface,
-            scheme.surface,
-            scheme.primary.withOpacity(0.08),
-          ]
-        : [
-            AppColors.primaryLight,
-            AppColors.accentGoldLight,
-            AppColors.secondaryLight,
-          ];
-
+  // Method to get professional gradient for backgrounds
+  static BoxDecoration getProfessionalGradientDecoration() {
     return BoxDecoration(
       gradient: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: colors,
-        stops: const [0.0, 0.5, 1.0],
+        colors: [
+          AppColors.primaryLight,     // Primary tomato-red on top
+          AppColors.accentGoldLight,   // Golden yellow in middle
+          AppColors.secondaryLight, // Forest green on end
+        ],
+        stops: [0.0, 0.5, 1.0],
       ),
     );
   }
 
-  // Method to get a subtle gradient for cards/containers (theme-aware)
-  static BoxDecoration getCardGradientDecoration(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
-
-    final List<Color> colors = isDark
-        ? [
-            scheme.surface,
-            scheme.surfaceContainerHighest.withOpacity(0.35),
-            scheme.primary.withOpacity(0.06),
-          ]
-        : [
-            Colors.white,
-            AppColors.backgroundLight.withOpacity(0.3),
-            AppColors.primaryLight.withOpacity(0.05),
-          ];
-
+  // Method to get a subtle gradient for cards/containers
+  static BoxDecoration getCardGradientDecoration() {
     return BoxDecoration(
       gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: colors,
+        colors: [
+          Colors.white,
+          AppColors.backgroundLight.withOpacity(0.3),
+          AppColors.primaryLight.withOpacity(0.05),
+        ],
         stops: const [0.0, 0.6, 1.0],
       ),
       borderRadius: BorderRadius.circular(16),
       border: Border.all(
-        color: isDark ? scheme.surfaceContainerHighest : AppColors.backgroundLight,
+        color: AppColors.backgroundLight,
         width: 1,
       ),
       boxShadow: [
         BoxShadow(
-          color: (isDark ? scheme.primary : AppColors.textLight).withOpacity(0.08),
+          color: AppColors.textLight.withOpacity(0.08),
           blurRadius: 8,
           offset: const Offset(0, 2),
         ),
@@ -455,28 +429,17 @@ class TomatoThemeProvider extends ChangeNotifier {
     );
   }
 
-  // Method to get accent gradient for special elements (theme-aware)
-  static BoxDecoration getAccentGradientDecoration(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
-    final List<Color> colors = isDark
-        ? [
-            scheme.primary.withOpacity(0.20),
-            scheme.secondary.withOpacity(0.18),
-            scheme.tertiary.withOpacity(0.16),
-          ]
-        : [
-            AppColors.primaryLight,
-            AppColors.accentGoldLight,
-            AppColors.secondaryLight,
-          ];
-
+  // Method to get accent gradient for special elements
+  static BoxDecoration getAccentGradientDecoration() {
     return BoxDecoration(
       gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: colors,
+        colors: [
+          AppColors.primaryLight,      // Primary tomato-red
+          AppColors.accentGoldLight,    // Golden yellow accent
+          AppColors.secondaryLight,  // Forest green secondary
+        ],
         stops: const [0.0, 0.5, 1.0],
       ),
       borderRadius: BorderRadius.circular(12),

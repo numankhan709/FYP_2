@@ -11,6 +11,8 @@ class AuthProvider with ChangeNotifier {
   bool _isLoading = false;
   bool _isInitialized = false;
   String? _errorMessage;
+  // Notifier for router refresh that only triggers on auth state changes
+  final ChangeNotifier _routerNotifier = ChangeNotifier();
 
   User? get user => _user;
   User? get currentUser => _user;
@@ -18,6 +20,7 @@ class AuthProvider with ChangeNotifier {
   bool get isInitialized => _isInitialized;
   String? get errorMessage => _errorMessage;
   bool get isAuthenticated => _user != null;
+  Listenable get routerListenable => _routerNotifier;
 
   AuthProvider() {
     _checkAuthStatus();
@@ -63,6 +66,7 @@ class AuthProvider with ChangeNotifier {
     } finally {
       _setLoading(false);
       _isInitialized = true;
+      _routerNotifier.notifyListeners();
     }
   }
 
@@ -100,7 +104,14 @@ class AuthProvider with ChangeNotifier {
   Future<bool> login(String email, String password) async {
     try {
       print('🔍 AuthProvider: Starting login process for $email');
+      _setLoading(true);
       _clearError();
+
+      final serverOk = await checkServerConnection();
+      if (!serverOk) {
+        print('⚠️ AuthProvider: Server health check failed, attempting login anyway');
+        // Continue to attempt login; health endpoint may be blocked while auth works
+      }
 
       final result = await _authService.login(email, password);
       print('🔍 AuthProvider: AuthService result: $result');
@@ -118,10 +129,8 @@ class AuthProvider with ChangeNotifier {
         
         print('✅ AuthProvider: User data saved to SharedPreferences');
         _isInitialized = true; // Ensure router redirect works
-        
-        // Add a small delay to ensure state is fully updated before router redirect
-        await Future.delayed(const Duration(milliseconds: 100));
         notifyListeners();
+        _routerNotifier.notifyListeners();
         return true;
       } else {
         print('❌ AuthProvider: Login failed: ${result['message']}');
@@ -133,7 +142,7 @@ class AuthProvider with ChangeNotifier {
       _setError('Network error. Please try again.');
       return false;
     } finally {
-      // Do not notify router on failed login via loading changes
+      _setLoading(false);
     }
   }
 
@@ -183,6 +192,7 @@ class AuthProvider with ChangeNotifier {
         
         print('✅ AuthProvider: Logout completed successfully');
         notifyListeners();
+        _routerNotifier.notifyListeners();
         return true;
       } else {
         print('❌ AuthProvider: Logout service failed');
@@ -199,6 +209,7 @@ class AuthProvider with ChangeNotifier {
       
       _setError('Logout completed with warnings.');
       notifyListeners();
+      _routerNotifier.notifyListeners();
       return true; // Return true because local state is cleared
     } finally {
       _setLoading(false);
@@ -228,12 +239,12 @@ class AuthProvider with ChangeNotifier {
 
   void _setError(String error) {
     _errorMessage = error;
-    // Avoid notifying listeners to prevent router refresh on error-only updates
+    notifyListeners();
   }
 
   void _clearError() {
     _errorMessage = null;
-    // Avoid notifying listeners to prevent router refresh on error-only updates
+    notifyListeners();
   }
   
   // Check authentication status
@@ -288,6 +299,63 @@ class AuthProvider with ChangeNotifier {
     return await _validateToken();
   }
 
+  Future<bool> forgotPassword(String email) async {
+    _setLoading(true);
+    _clearError();
+    try {
+      final result = await _authService.forgotPassword(email);
+      if (result['success'] == true) {
+        return true;
+      } else {
+        _setError((result['message'] as String?) ?? 'Failed to send reset email');
+        return false;
+      }
+    } catch (e) {
+      _setError('Network error. Please try again.');
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  Future<bool> verifyEmailExists(String email) async {
+    _setLoading(true);
+    _clearError();
+    try {
+      final result = await _authService.verifyEmailExists(email);
+      if (result['success'] == true) {
+        return true;
+      } else {
+        _setError((result['message'] as String?) ?? 'Invalid email');
+        return false;
+      }
+    } catch (e) {
+      _setError('Network error. Please try again.');
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  Future<bool> resetPasswordByEmail(String email, String newPassword) async {
+    _setLoading(true);
+    _clearError();
+    try {
+      final result = await _authService.resetPasswordByEmail(email, newPassword);
+      if (result['success'] == true) {
+        return true;
+      } else {
+        _setError((result['message'] as String?) ?? 'Failed to reset password');
+        return false;
+      }
+    } catch (e) {
+      _setError('Network error. Please try again.');
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   // Check if server is reachable
   Future<bool> checkServerConnection() async {
     try {
@@ -323,20 +391,38 @@ class AuthProvider with ChangeNotifier {
         profileImagePath = profileImage.path;
       }
 
-      final result = await _authService.updateProfile(
+      final Map<String, dynamic> result = await _authService.updateProfile(
         token: token,
         name: name,
         email: email,
         profileImage: profileImagePath,
       );
 
-      if (result['success']) {
-        _user = result['user'];
-        await _saveUserData(_user!);
-        notifyListeners();
-        return true;
+      final bool success = result['success'] == true;
+      if (success) {
+        final dynamic userValue = result['user'];
+        if (userValue is User) {
+          setUserSilently(userValue);
+          await _saveUserData(_user!);
+          return true;
+        } else if (userValue is Map<String, dynamic>) {
+          // Handle case where service returns raw JSON
+          try {
+            setUserSilently(User.fromJson(userValue));
+            await _saveUserData(_user!);
+            return true;
+          } catch (e) {
+            _setError('Invalid user data received');
+            return false;
+          }
+        } else {
+          _setError('Invalid user data received');
+          return false;
+        }
       } else {
-        _setError(result['message'] ?? 'Profile update failed');
+        final String message = (result['message'] as String?) ?? 'Profile update failed';
+        _errorMessage = message;
+        notifyListeners();
         return false;
       }
     } catch (e) {
@@ -345,5 +431,9 @@ class AuthProvider with ChangeNotifier {
     } finally {
       _setLoading(false);
     }
+  }
+
+  void refresh() {
+    notifyListeners();
   }
 }
